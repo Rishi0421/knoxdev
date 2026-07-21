@@ -1,0 +1,1 @@
+data:image/svg+xml,<svg display="block" role="presentation" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M 0 0 L 16 0 L 16 8 L 8 8 Z M 0 8 L 8 8 L 16 16 L 0 16 Z M 0 16 L 8 16 L 8 24 Z" fill="var(--12auh5f, var(--token-2759885a-0605-4b0d-ae5f-9a938c3766f2, rgb(0, 0, 0)))" height="24px" id="cRzu_KaKs" transform="translate(4 0)" width="16px"/></svg>

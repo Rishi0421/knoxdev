@@ -16618,6 +16618,8 @@ if (!document.getElementById("knox-theme-toggle")) {
 </script>
 
 
+
+
 <script>
 // Monkey patch fetch to fix Formspree CORS and schema issues
 const originalFetch = window.fetch;
@@ -16631,14 +16633,42 @@ window.fetch = async function(...args) {
 
     if (url && url.includes('formspree.io')) {
         try {
-            // Reconstruct the fetch arguments to strip out Framer's custom headers/credentials
-            // which cause CORS NetworkErrors on Formspree
-            let bodyData = null;
-            if (args[1] && args[1].body) {
-                bodyData = args[1].body;
-            } else if (args[0] && args[0].body) {
-                // If the first argument was a Request object, reading its body is tricky without cloning
-                // but Framer passes the body in args[1]
+            let bodyData = (args[1] && args[1].body) ? args[1].body : null;
+            let formObj = {};
+            
+            try {
+                if (bodyData instanceof FormData) {
+                    for (let [key, value] of bodyData.entries()) {
+                        formObj[key] = value;
+                    }
+                } else if (typeof bodyData === 'string') {
+                    let parsed = JSON.parse(bodyData);
+                    if (parsed.values) formObj = parsed.values;
+                    else if (Array.isArray(parsed.fields)) {
+                        parsed.fields.forEach(f => { formObj[f.name || f.id] = f.value; });
+                    }
+                    else formObj = parsed;
+                }
+            } catch(e) {
+                console.error("Failed to parse bodyData", e);
+            }
+
+            // Fallback to reading DOM directly if formObj is empty or missing
+            if (Object.keys(formObj).length === 0) {
+                document.querySelectorAll('input, textarea, select').forEach(el => {
+                    let key = el.name || el.placeholder || el.id;
+                    if (key && el.value) {
+                        formObj[key] = el.value;
+                    }
+                });
+            }
+            
+            // Clean up empty keys and Framer's hidden tracking variables
+            delete formObj[''];
+            for (let key in formObj) {
+                if (key.includes('__framer') || key.startsWith('framer')) {
+                    delete formObj[key];
+                }
             }
 
             const cleanOptions = {
@@ -16647,7 +16677,7 @@ window.fetch = async function(...args) {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: bodyData
+                body: JSON.stringify(formObj)
             };
 
             const response = await originalFetch(url, cleanOptions);
@@ -16655,14 +16685,14 @@ window.fetch = async function(...args) {
             if (!response.ok) {
                 const text = await response.text();
                 console.error("Formspree Error:", response.status, text);
-                alert("Form Error: Please make sure your Formspree email is verified in your Formspree dashboard.");
+                alert("Form Error: " + text);
                 return new Response(text, {status: response.status, statusText: response.statusText});
             } else {
                 return new Response('{"ok":true}', {status: 200, headers: {'Content-Type': 'application/json'}});
             }
         } catch (e) {
             console.error("Fetch intercepted error:", e);
-            alert("Network Error: Could not reach the form server. Please disable your ad-blocker or tracking protection and try again.");
+            alert("Network Error: Could not reach the form server.");
             throw e;
         }
     }

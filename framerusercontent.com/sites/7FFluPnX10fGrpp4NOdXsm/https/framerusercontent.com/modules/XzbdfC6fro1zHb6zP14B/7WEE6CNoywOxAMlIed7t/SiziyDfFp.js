@@ -567,7 +567,7 @@ const Component = /*#__PURE__*/ React.forwardRef(function(props, ref) {
                             })
                         })
                     }), /*#__PURE__*/ _jsx(Link, {
-                        href: "https://www.linkedin.com/",
+                        href: "https://www.linkedin.com/in/ayush-singh-1b7718414/",
                         motionChild: true,
                         nodeId: "wgs4fW3qp",
                         openInNewTab: false,

@@ -289,7 +289,7 @@ const Component = /*#__PURE__*/ React.forwardRef(function(props, ref) {
                                                             "--framer-text-color": "var(--extracted-r6o4lv, var(--token-46244ad7-86a7-41b8-b44b-214d95b54c13, rgb(130, 130, 130)))"
                                                         },
                                                         children: ["Fill out the form below or ", /*#__PURE__*/ _jsx(Link, {
-                                                            href: "cal.com",
+                                                            href: "https://cal.com/ayush-singh-knox-4ixci6/30min",
                                                             motionChild: true,
                                                             nodeId: "vDCKqoA4c",
                                                             openInNewTab: true,
@@ -539,6 +539,10 @@ const Component = /*#__PURE__*/ React.forwardRef(function(props, ref) {
                                                     title: "Unlimited Budget",
                                                     type: "option",
                                                     value: "Unlimited Budget"
+                                                }, {
+                                                    title: "Customize Budget",
+                                                    type: "option",
+                                                    value: "Customize Budget"
                                                 }],
                                                 style: {
                                                     "--framer-input-border-bottom-width": "1px",

@@ -384,7 +384,7 @@ const Component = /*#__PURE__*/ React.forwardRef(function(props, ref) {
                                                     "--framer-text-color": "var(--extracted-r6o4lv, var(--token-33c8dbd0-eb94-4e90-8099-e7a3fee4ad2f, rgb(255, 255, 255)))"
                                                 },
                                                 children: /*#__PURE__*/ _jsx(Link, {
-                                                    href: "cal.com",
+                                                    href: "https://cal.com/ayush-singh-knox-4ixci6/30min",
                                                     motionChild: true,
                                                     nodeId: "I98RVqjvo",
                                                     openInNewTab: false,

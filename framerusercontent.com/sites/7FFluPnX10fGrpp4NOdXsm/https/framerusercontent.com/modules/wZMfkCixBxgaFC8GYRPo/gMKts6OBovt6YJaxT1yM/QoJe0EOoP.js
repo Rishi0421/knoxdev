@@ -278,7 +278,7 @@ const Component = /*#__PURE__*/ React.forwardRef(function(props, ref) {
                                         style: {
                                             height: "100%"
                                         },
-                                        tCywb3cps: "https://cal.com",
+                                        tCywb3cps: "https://cal.com/ayush-singh-knox-4ixci6/30min",
                                         variant: matchVariant("Vbg99qxyS"),
                                         width: "100%",
                                         ...addPropertyOverrides({

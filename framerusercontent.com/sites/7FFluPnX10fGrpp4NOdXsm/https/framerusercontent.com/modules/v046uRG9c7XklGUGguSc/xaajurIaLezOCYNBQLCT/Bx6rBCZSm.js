@@ -121,12 +121,12 @@ const getProps = ({
 }) => {
     return { ...props,
         C3wqzi1gH: title2 ?? props.C3wqzi1gH ?? "Staff Product Designer",
-        ciHciAUDB: date3 ?? props.ciHciAUDB ?? "2016-2020",
+        ciHciAUDB: date3 ?? props.ciHciAUDB ?? "2021-2025",
         cWbhifCIf: company2 ?? props.cWbhifCIf ?? "Quantum",
         fY47FdliR: company3 ?? props.fY47FdliR ?? "Zazzle",
         onWmspHut: title3 ?? props.onWmspHut ?? "Designer",
         qGp7vI2z6: company1 ?? props.qGp7vI2z6 ?? "Nexus Technology",
-        rrXhSebWp: date1 ?? props.rrXhSebWp ?? "2012-2024",
+        rrXhSebWp: date1 ?? props.rrXhSebWp ?? "2020-2024",
         rxHhshyDG: date2 ?? props.rxHhshyDG ?? "2020-2022",
         variant: humanReadableVariantMap[props.variant] ?? props.variant ?? "wrjEuEMq5",
         wrlTXIfKr: title1 ?? props.wrlTXIfKr ?? "Full-Stack Designer"
@@ -523,7 +523,7 @@ addPropertyControls(FramerBx6rBCZSm, {
         type: ControlType.ChangeHandler
     },
     rrXhSebWp: {
-        defaultValue: "2012-2024",
+        defaultValue: "2020-2024",
         displayTextArea: false,
         title: "Date 1",
         type: ControlType.String
@@ -583,7 +583,7 @@ addPropertyControls(FramerBx6rBCZSm, {
         type: ControlType.ChangeHandler
     },
     ciHciAUDB: {
-        defaultValue: "2016-2020",
+        defaultValue: "2021-2025",
         displayTextArea: false,
         title: "Date 3",
         type: ControlType.String

@@ -1867,7 +1867,7 @@ const Component = /*#__PURE__*/ React.forwardRef(function(props, ref) {
                                         S36CzfaRp: S36CzfaRpko9la1({
                                             overlay
                                         }),
-                                        T2eKpjYwE: "cal.com",
+                                        T2eKpjYwE: "https://cal.com/ayush-singh-knox-4ixci6/30min",
                                         variant: matchVariant("VuoPoLmFD"),
                                         width: "100%"
                                     })

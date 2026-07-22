@@ -74,7 +74,7 @@ const getProps = ({
         De9UXQuLp: image ?? props.De9UXQuLp ?? {
             pixelHeight: 64,
             pixelWidth: 64,
-            src: "https://framerusercontent.com/images/pKKKvDTDIMbGXt4SKNGc5PEgrkU.jpg?width=64&height=64"
+            src: "https://res.cloudinary.com/utghalkl/image/upload/v1784705076/KNOX_ews3lf.png"
         }
     };
 };
@@ -179,7 +179,7 @@ FramerQHsZGkb1s.defaultProps = {
 };
 addPropertyControls(FramerQHsZGkb1s, {
     De9UXQuLp: {
-        __defaultAssetReference: "data:framer/asset-reference,pKKKvDTDIMbGXt4SKNGc5PEgrkU.jpg?originalFilename=avatar3.jpg&preferredSize=auto",
+        __defaultAssetReference: "https://res.cloudinary.com/utghalkl/image/upload/v1784705076/KNOX_ews3lf.png",
         title: "Image",
         type: ControlType.ResponsiveImage
     }

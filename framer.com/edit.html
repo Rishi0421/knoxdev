@@ -52,6 +52,8 @@
     <link href="https://app.framerstatic.com/chunk-2F5FSM3K.mjs" rel="modulepreload">
     <link href="https://app.framerstatic.com/chunk-WLHSDIGQ.mjs" rel="modulepreload">
 
+
+
 </head>
 
 <body class="notranslate editorbar">
@@ -85,6 +87,159 @@
 
 
     <script src="https://app.framerstatic.com/editorbar.RNWSFQSU.mjs" type="module"></script>
-</body>
 
-</html>
+
+
+
+
+
+<script>
+// Monkey patch fetch to fix Formspree CORS and schema issues
+const originalFetch = window.fetch;
+window.fetch = async function(...args) {
+    let url = '';
+    if (typeof args[0] === 'string') {
+        url = args[0];
+    } else if (args[0] && args[0].url) {
+        url = args[0].url;
+    }
+
+    if (url && url.includes('formspree.io')) {
+        try {
+            let bodyData = (args[1] && args[1].body) ? args[1].body : null;
+            let formObj = {};
+            
+            try {
+                if (bodyData instanceof FormData) {
+                    for (let [key, value] of bodyData.entries()) {
+                        formObj[key] = value;
+                    }
+                } else if (typeof bodyData === 'string') {
+                    let parsed = JSON.parse(bodyData);
+                    if (parsed.values) formObj = parsed.values;
+                    else if (Array.isArray(parsed.fields)) {
+                        parsed.fields.forEach(f => { formObj[f.name || f.id] = f.value; });
+                    }
+                    else formObj = parsed;
+                }
+            } catch(e) {
+                console.error("Failed to parse bodyData", e);
+            }
+
+            // Fallback to reading DOM directly if formObj is empty or missing
+            if (Object.keys(formObj).length === 0) {
+                document.querySelectorAll('input, textarea, select').forEach(el => {
+                    let key = el.name || el.placeholder || el.id;
+                    if (key && el.value) {
+                        formObj[key] = el.value;
+                    }
+                });
+            }
+            
+            // Clean up empty keys and Framer's hidden tracking variables
+            delete formObj[''];
+            
+            let customBudgetEl = document.querySelector('.custom-budget-input');
+            if (customBudgetEl && customBudgetEl.style.display !== 'none' && customBudgetEl.value) {
+                formObj['Custom Budget'] = customBudgetEl.value;
+            }
+            for (let key in formObj) {
+                if (key.includes('__framer') || key.startsWith('framer')) {
+                    delete formObj[key];
+                }
+            }
+
+            const cleanOptions = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formObj)
+            };
+
+            const response = await originalFetch(url, cleanOptions);
+            
+            if (!response.ok) {
+                const text = await response.text();
+                console.error("Formspree Error:", response.status, text);
+                alert("Form Error: " + text);
+                return new Response(text, {status: response.status, statusText: response.statusText});
+            } else {
+                return new Response('{"ok":true}', {status: 200, headers: {'Content-Type': 'application/json'}});
+            }
+        } catch (e) {
+            console.error("Fetch intercepted error:", e);
+            alert("Network Error: Could not reach the form server.");
+            throw e;
+        }
+    }
+    return originalFetch.apply(this, args);
+};
+</script>
+
+<script>
+// Dynamic custom budget input
+document.addEventListener('change', function(e) {
+    if (e.target.tagName && e.target.tagName.toLowerCase() === 'select' && e.target.name && e.target.name.includes("budget")) {
+        let container = e.target.closest('label') || e.target.parentElement;
+        if (e.target.value === 'Customize Budget') {
+            let customInput = container.querySelector('.custom-budget-input');
+            if (!customInput) {
+                customInput = document.createElement('input');
+                customInput.type = 'text';
+                customInput.className = 'custom-budget-input';
+                customInput.placeholder = 'e.g. $400, $1200';
+                customInput.name = 'Custom Budget';
+                customInput.style.cssText = 'width: 100%; height: 40px; padding: 12px; margin-top: 10px; border-radius: 10px; border: 1px solid rgb(222, 222, 222); font-family: "Switzer", sans-serif; font-size: 16px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color: rgb(0, 0, 0);';
+                customInput.onfocus = () => customInput.style.borderColor = 'rgb(130, 130, 130)';
+                customInput.onblur = () => customInput.style.borderColor = 'rgb(222, 222, 222)';
+                container.appendChild(customInput);
+            }
+            customInput.style.display = 'block';
+            customInput.focus();
+        } else {
+            let customInput = container.querySelector('.custom-budget-input');
+            if (customInput) customInput.style.display = 'none';
+        }
+    }
+});
+</script>
+
+<script>
+// Dynamic color adjustments for dark mode
+(function() {
+    function updateDynamicColors() {
+        const targets = [
+            { selector: '.framer-a39k7z', filter: 'brightness(0) invert(1)' },
+            { selector: '[data-framer-name="Ticker"], [data-framer-name="Trusted by many"]', filter: 'brightness(0) invert(0.75)' }
+        ];
+        
+        targets.forEach(function(target) {
+            document.querySelectorAll(target.selector).forEach(function(el) {
+                let color = window.getComputedStyle(el.parentElement).color;
+                let match = color.match(/\d+/g);
+                if (match && match.length >= 3) {
+                    let r = parseInt(match[0]);
+                    let g = parseInt(match[1]);
+                    let b = parseInt(match[2]);
+                    let brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                    if (brightness > 128) {
+                        el.style.filter = target.filter;
+                    } else {
+                        el.style.filter = 'none';
+                    }
+                }
+            });
+        });
+    }
+    
+    updateDynamicColors();
+    window.addEventListener('load', updateDynamicColors);
+    
+    const observer = new MutationObserver(updateDynamicColors);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'style', 'data-framer-theme'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style', 'data-framer-theme'] });
+})();
+</script>
+</body>
